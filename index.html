@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Research Project Tracker</title>
+		<link rel="stylesheet" href="style.css" />
+	</head>
+	<body>
+		<main>
+			<h1>Research Project Tracker</h1>
+			
+			<form id="project-form">
+				<div id="form-error" role="alert" aria-live="assertive"></div>
+				<fieldset>
+					<legend>Add Research Project</legend>
+					
+					<label for="title">Project Title</label>
+					<input id="title" name="title" type="text" required />
+					
+					<label for="pi">Principal Investigator</label>
+					<input id="pi" name="pi" type="text" required />
+					
+					<label for="department">Department</label>
+					<input id="department" name="department" type="text" />
+		
+					<label for="status">Status</label>
+					<select id="status" name="status" required>
+						<option value="">Select Status</option>
+						<option value="active">Active</option>
+						<option value="completed">Completed</option>
+					</select>
+
+					<label for="startDate">Start Date</label>
+					<input id="startDate" name="startDate" type="date" required />
+					
+					<button type="submit">Add Project</button>
+				</fieldset>
+			</form>
+			
+			<label for="search">Search Projects</label>
+			<input id="search" aria-controls="project-list" type="text" placeholder="Search by title or PI" />
+			
+			<section aria-live="polite">
+				<h2>Projects</h2>
+				<ul id="project-list"></ul>
+			</section>
+		</main>
+		
+		<script src="script.js"></script>
+	</body>
+</html>

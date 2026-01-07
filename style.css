@@ -1,0 +1,43 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 1rem;
+  background-color: #f9f9f9;
+}
+
+main {
+  max-width: 800px;
+  margin: auto;
+}
+
+form {
+  background: white;
+  padding: 1rem;
+  border-radius: 4px;
+}
+
+label {
+  display: block;
+  margin-top: 0.75rem;
+}
+
+input, select, button {
+  width: -webkit-fill-available;
+  padding: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+button {
+  margin-top: 1rem;
+}
+
+#form-error {
+	color: #b00020;
+	margin-bottom: 0.25rem;
+}
+
+@media (min-width: 600px) {
+  form {
+    padding: 2rem;
+  }
+}
