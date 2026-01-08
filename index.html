@@ -40,6 +40,14 @@
 			<label for="search">Search Projects</label>
 			<input id="search" aria-controls="project-list" type="text" placeholder="Search by title or PI" />
 			
+			<label for="sort">Sort Projects</label>
+			<select id="sort" aria-label="sort-project">
+				<option value="date-desc">Start Date (Newest First)</option>
+				<option value="date_asc">Start Date (Oldest First)</option>
+				<option value="title-asc">Title (A-Z)</option>
+				<option value="title-desc">Title (Z-A)</option>
+			</select>
+			
 			<section aria-live="polite">
 				<h2>Projects</h2>
 				<ul id="project-list"></ul>
