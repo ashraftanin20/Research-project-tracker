@@ -38,32 +38,74 @@ form.addEventListener("submit", (e) => {
 	};
 	projects.push(project);
 	
-	renderProjects(projects);
+	applyFilterAndSort();
 	form.reset();
 });
 
 searchInput.addEventListener("input", () => {
-	const query = searchInput.value.trim().toLowerCase();
 	
-	const filtered = projects.filter((project) => {
-		return (
+	applyFilterAndSort();
+});
+
+const sortSelect = document.getElementById("sort");
+sortSelect.addEventListener("change", () => {
+	applyFilterAndSort();
+});
+
+function applyFilterAndSort() {
+	const query = searchInput.value.trim().toLowerCase();
+	const sortValue = sortSelect.value;
+	
+	let result = [...projects];
+	
+	if (query) {
+		result = result.filter((project) =>
 			project.title.toLowerCase().includes(query) ||
 			project.principalInvestigator.toLowerCase().includes(query)
 		);
-	});
+	};
 	
-	renderProjects(filtered);
-});
+	switch(sortValue) {
+		case "date-asc":
+			result.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+			break;
+		case "date-desc":
+			result.sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
+			break;
+		case "title-asc":
+			result.sort((a, b) => a.title.localeCompare(b.title));
+			break;
+		case "title-desc":
+			result.sort((a, b) => b.title.localeCompare(a.title));
+			break;
+	}
+	
+	renderProjects(result);
+}
 
 function renderProjects(projectListData) {
 	projectList.innerHTML = "";
+	
 	if (projectListData.length === 0) {
-		projectList.innerHTML = "<li>No projects found.</li>";
+		const li = document.createElement("li");
+		li.textContent = "No Project found.";
+		projectList.appendChild(li);
 		return;
 	}
+	
 	projectListData.forEach((project) => {
 		const li = document.createElement("li");
-		li.textContent = `${project.title} - ${project.principalInvestigator} (${project.status})`;
+		
+		const title = document.createElement("strong");
+		title.textContent = project.title;
+		
+		const meta = document.createElement("div");
+		meta.textContent = `${project.principalInvestigator} • ${project.status} • ${project.startDate}`;
+		
+		li.appendChild(title);
+		li.appendChild(document.createElement("br"));
+		li.appendChild(meta);
+		
 		projectList.appendChild(li);
 	});
 }
