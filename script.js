@@ -1,9 +1,11 @@
 const form = document.getElementById("project-form");
 const projectList = document.getElementById("project-list");
 const formError = document.getElementById("form-error");
-const projects = [];
+const sortSelect = document.getElementById("sort");
 const searchInput = document.getElementById("search");
 
+const projects = [];
+applyFilterAndSort();
 form.addEventListener("submit", (e) => {
 	e.preventDefault();
 	formError.textContent = "";
@@ -36,9 +38,13 @@ form.addEventListener("submit", (e) => {
 		status,
 		startDate
 	};
-	projects.push(project);
-	
-	applyFilterAndSort();
+	//projects.push(project);
+	fetch("http://localhost:3000/api/projects", {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify(project)
+	}).
+	then(() => applyFilterAndSort());
 	form.reset();
 });
 
@@ -47,7 +53,6 @@ searchInput.addEventListener("input", () => {
 	applyFilterAndSort();
 });
 
-const sortSelect = document.getElementById("sort");
 sortSelect.addEventListener("change", () => {
 	applyFilterAndSort();
 });
@@ -55,32 +60,42 @@ sortSelect.addEventListener("change", () => {
 function applyFilterAndSort() {
 	const query = searchInput.value.trim().toLowerCase();
 	const sortValue = sortSelect.value;
+	fetch("http://localhost:3000/api/projects")
+		.then(res => res.json())
+		.then(data => {
+			projects.length = 0;
+			projects.push(...data);
+				
+		let result = [...projects];
 	
-	let result = [...projects];
-	
-	if (query) {
+		if (query) {
 		result = result.filter((project) =>
-			project.title.toLowerCase().includes(query) ||
-			project.principalInvestigator.toLowerCase().includes(query)
-		);
-	};
+				project.title.toLowerCase().includes(query) ||
+				project.principalInvestigator.toLowerCase().includes(query)
+			);
+		};
 	
-	switch(sortValue) {
-		case "date-asc":
-			result.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
-			break;
-		case "date-desc":
-			result.sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
-			break;
-		case "title-asc":
-			result.sort((a, b) => a.title.localeCompare(b.title));
-			break;
-		case "title-desc":
-			result.sort((a, b) => b.title.localeCompare(a.title));
-			break;
-	}
+		switch(sortValue) {
+			case "date-asc":
+				result.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+				break;
+			case "date-desc":
+				result.sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
+				break;
+			case "title-asc":
+				result.sort((a, b) => a.title.localeCompare(b.title));
+				break;
+			case "title-desc":
+				result.sort((a, b) => b.title.localeCompare(a.title));
+				break;
+		}
 	
-	renderProjects(result);
+		renderProjects(result);
+		})
+		.catch(err => {
+			console.log(err);
+			formError.textContent = "Failed to load projects.";
+		});
 }
 
 function renderProjects(projectListData) {
